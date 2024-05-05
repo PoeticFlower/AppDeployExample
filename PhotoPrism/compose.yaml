@@ -73,28 +73,28 @@ services:
       PHOTOPRISM_WAKEUP_INTERVAL       : "15m0s"                               # 工作线程：DURATION between worker runs required for face recognition and index maintenance (1-86400s)
       PHOTOPRISM_AUTO_INDEX            : 300                                   # 工作线程：WebDAV auto index safety delay in SECONDS (-1 to disable)
       PHOTOPRISM_AUTO_IMPORT           : 180                                   # 工作线程：WebDAV auto import safety delay in SECONDS (-1 to disable)
-      PHOTOPRISM_READONLY              : "false"                               # 功能标识：设为true则禁用导入、上传、删除以及所有其它需要写入权限的操作
-      PHOTOPRISM_EXPERIMENTAL          : "false"                               # 功能标识：设为true则启用实验性功能
+      PHOTOPRISM_READONLY              : "false"                               # 功能标识：设为true则不修改源文件夹，禁止导入、上传、删除
+      PHOTOPRISM_EXPERIMENTAL          : "false"                               # 功能标识：设为true则启用处于开发中的新特性
       PHOTOPRISM_DISABLE_SETTINGS      : "false"                               # 功能标识：设为true则禁用UI和API中的设置能力
       PHOTOPRISM_DISABLE_RESTART       : "false"                               # 功能标识：设为true则禁止从UI重启服务器
-      PHOTOPRISM_DISABLE_BACKUPS       : "false"                               # 功能标识：设为true则禁止将相册和照片元数据备份到YAML文件
-      PHOTOPRISM_DISABLE_WEBDAV        : "false"                               # 功能标识：设为true则禁用内置的WebDAV服务器
-      PHOTOPRISM_DISABLE_PLACES        : "false"                               # 功能标识：设为true则禁用反向地理编码和地图功能
-      PHOTOPRISM_DISABLE_TENSORFLOW    : "false"                               # 功能标识：设为true则禁用所有基于TensorFlow的功能
+      PHOTOPRISM_DISABLE_BACKUPS       : "false"                               # 功能标识：设为true则不备份照片和相册元数据到YAML文件中
+      PHOTOPRISM_DISABLE_WEBDAV        : "false"                               # 功能标识：设为true则禁用内置WebDAV服务器
+      PHOTOPRISM_DISABLE_PLACES        : "false"                               # 功能标识：设为true则禁用反向地理编码和地图
+      PHOTOPRISM_DISABLE_TENSORFLOW    : "false"                               # 功能标识：设为true则不使用TensorFlow分类图像
       PHOTOPRISM_DISABLE_FACES         : "false"                               # 功能标识：设为true则禁用人脸检测和识别（此功能依赖TensorFlow）
       PHOTOPRISM_DISABLE_CLASSIFICATIO : "false"                               # 功能标识：设为true则禁用图片分类功能（此功能依赖TensorFlow）
       PHOTOPRISM_DISABLE_SIPS          : "false"                               # 功能标识：设为true则禁用Sips（仅用于MacOS）
-      PHOTOPRISM_DISABLE_FFMPEG        : "false"                               # 功能标识：设为true则禁用FFmpeg
-      PHOTOPRISM_DISABLE_EXIFTOOL      : "false"                               # 功能标识：设为true则禁用ExifTool
-      PHOTOPRISM_DISABLE_DARKTABLE     : "false"                               # 功能标识：设为true则禁用Darktable
-      PHOTOPRISM_DISABLE_RAWTHERAPEE   : "false"                               # 功能标识：设为true则禁用RawTherapee
-      PHOTOPRISM_DISABLE_IMAGEMAGICK   : "false"                               # 功能标识：设为true则禁用ImageMagic
+      PHOTOPRISM_DISABLE_FFMPEG        : "false"                               # 功能标识：设为true则禁用视频转码和缩略图提取
+      PHOTOPRISM_DISABLE_EXIFTOOL      : "false"                               # 功能标识：设为true则不创建ExifTool JSON文件，以改善元数据提取
+      PHOTOPRISM_DISABLE_DARKTABLE     : "false"                               # 功能标识：设为true则不使用Darktable转换RAW文件
+      PHOTOPRISM_DISABLE_RAWTHERAPEE   : "false"                               # 功能标识：设为true则不使用RawTherapee转换RAW文件
+      PHOTOPRISM_DISABLE_IMAGEMAGICK   : "false"                               # 功能标识：设为true则不使用ImageMagic来转换图像
       PHOTOPRISM_DISABLE_HEIFCONVERT   : "false"                               # 功能标识：设为true则禁用libheif
       PHOTOPRISM_DISABLE_RSVGCONVERT   : "false"                               # 功能标识：设为true则禁用librsvg
       PHOTOPRISM_DISABLE_VECTORS       : "false"                               # 功能标识：设为true则禁用矢量图支持
       PHOTOPRISM_DISABLE_JPEGXL        : "false"                               # 功能标识：设为true则禁用JPEGXL文件格式支持
       PHOTOPRISM_DISABLE_RAW           : "false"                               # 功能标识：设为true则禁用RAW索引和转换功能
-      PHOTOPRISM_RAW_PRESETS           : "false"                               # 功能标识：设为true则允许在转换RAW图像时应用用户预设（会降低性能）
+      PHOTOPRISM_RAW_PRESETS           : "false"                               # 功能标识：设为true则启用RAW转换器预设，可能会降低性能
       PHOTOPRISM_EXIF_BRUTEFORCE       : "false"                               # 功能标识：设为true则在为找到Exif标头时，始终执行强力搜索
       PHOTOPRISM_DETECT_NSFW           : "false"                               # 功能标识：设为true则将NSFW图像标记为私人照片（此功能依赖TensorFlow）
       PHOTOPRISM_UPLOAD_NSFW           : "true"                                # 功能标识：设为true则允许上传NSFW图像
@@ -186,9 +186,9 @@ services:
       PHOTOPRISM_THUMB_SIZE            : 7680                                  # 图像质量：maximum size of thumbnails created during indexing in PIXELS (720-7680)
       PHOTOPRISM_THUMB_SIZE_UNCACHED   : 7680                                  # 图像质量：maximum size of missing thumbnails created on demand in PIXELS (720-7680)
       PHOTOPRISM_THUMB_UNCACHED        : "true"                                # 图像质量：enable on-demand creation of missing thumbnails (high memory and cpu usage)
-      PHOTOPRISM_JPEG_QUALITY          : 100                                   # 图像质量：a higher value increases the QUALITY and file size of JPEG images and thumbnails (25-100)
-      PHOTOPRISM_JPEG_SIZE             : 30000                                 # 图像质量：maximum size of created JPEG sidecar files in PIXELS (720-30000)
-      PHOTOPRISM_PNG_SIZE              : 30000                                 # 图像质量：maximum size of created PNG sidecar files in PIXELS (720-30000)
+      PHOTOPRISM_JPEG_QUALITY          : 100                                   # 图像质量：JPEG质量（25-100）
+      PHOTOPRISM_JPEG_SIZE             : 30000                                 # 图像质量：JPEG尺寸限制（像素，720-30000）
+      PHOTOPRISM_PNG_SIZE              : 30000                                 # 图像质量：PNG 尺寸限制（像素，720-30000）
       PHOTOPRISM_FACE_SIZE             : 50                                    # 面部识别：minimum size of faces in PIXELS (20-10000)
       PHOTOPRISM_FACE_SCORE            : 9.000000                              # 面部识别：minimum face QUALITY score (1-100)
       PHOTOPRISM_FACE_OVERLAP          : 42                                    # 面部识别：face area overlap threshold in PERCENT (1-100)
