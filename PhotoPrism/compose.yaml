@@ -45,48 +45,166 @@ services:
     ## Before you start the service, please check the following config options (and change them as needed):
     ## https://docs.photoprism.app/getting-started/config-options/
     environment:
-      PHOTOPRISM_ADMIN_USER: "admin"                 # admin login username
-      PHOTOPRISM_ADMIN_PASSWORD: "insecure"          # initial admin password (8-72 characters)
-      PHOTOPRISM_AUTH_MODE: "password"               # authentication mode (public, password)
-      PHOTOPRISM_SITE_URL: "http://localhost:2342/"  # server URL in the format "http(s)://domain.name(:port)/(path)"
-      PHOTOPRISM_DISABLE_TLS: "false"                # disables HTTPS/TLS even if the site URL starts with https:// and a certificate is available
-      PHOTOPRISM_DEFAULT_TLS: "true"                 # defaults to a self-signed HTTPS/TLS certificate if no other certificate is available
-      PHOTOPRISM_ORIGINALS_LIMIT: 5000               # file size limit for originals in MB (increase for high-res video)
-      PHOTOPRISM_HTTP_COMPRESSION: "gzip"            # improves transfer speed and bandwidth utilization (none or gzip)
-      PHOTOPRISM_LOG_LEVEL: "info"                   # log level: trace, debug, info, warning, error, fatal, or panic
-      PHOTOPRISM_READONLY: "false"                   # do not modify originals directory (reduced functionality)
-      PHOTOPRISM_EXPERIMENTAL: "false"               # enables experimental features
-      PHOTOPRISM_DISABLE_CHOWN: "false"              # disables updating storage permissions via chmod and chown on startup
-      PHOTOPRISM_DISABLE_WEBDAV: "false"             # disables built-in WebDAV server
-      PHOTOPRISM_DISABLE_SETTINGS: "false"           # disables settings UI and API
-      PHOTOPRISM_DISABLE_TENSORFLOW: "false"         # disables all features depending on TensorFlow
-      PHOTOPRISM_DISABLE_FACES: "false"              # disables face detection and recognition (requires TensorFlow)
-      PHOTOPRISM_DISABLE_CLASSIFICATION: "false"     # disables image classification (requires TensorFlow)
-      PHOTOPRISM_DISABLE_VECTORS: "false"            # disables vector graphics support
-      PHOTOPRISM_DISABLE_RAW: "false"                # disables indexing and conversion of RAW images
-      PHOTOPRISM_RAW_PRESETS: "false"                # enables applying user presets when converting RAW images (reduces performance)
-      PHOTOPRISM_JPEG_QUALITY: 85                    # a higher value increases the quality and file size of JPEG images and thumbnails (25-100)
-      PHOTOPRISM_DETECT_NSFW: "false"                # automatically flags photos as private that MAY be offensive (requires TensorFlow)
-      PHOTOPRISM_UPLOAD_NSFW: "true"                 # allows uploads that MAY be offensive (no effect without TensorFlow)
-      # PHOTOPRISM_DATABASE_DRIVER: "sqlite"         # SQLite is an embedded database that doesn't require a server
-      PHOTOPRISM_DATABASE_DRIVER: "mysql"            # use MariaDB 10.5+ or MySQL 8+ instead of SQLite for improved performance
-      PHOTOPRISM_DATABASE_SERVER: "mariadb:3306"     # MariaDB or MySQL database server (hostname:port)
-      PHOTOPRISM_DATABASE_NAME: "photoprism"         # MariaDB or MySQL database schema name
-      PHOTOPRISM_DATABASE_USER: "photoprism"         # MariaDB or MySQL database user name
-      PHOTOPRISM_DATABASE_PASSWORD: "insecure"       # MariaDB or MySQL database user password
-      PHOTOPRISM_SITE_CAPTION: "AI-Powered Photos App"
-      PHOTOPRISM_SITE_DESCRIPTION: ""                # meta site description
-      PHOTOPRISM_SITE_AUTHOR: ""                     # meta site author
-      ## Video Transcoding (https://docs.photoprism.app/getting-started/advanced/transcoding/):
-      # PHOTOPRISM_FFMPEG_ENCODER: "software"        # H.264/AVC encoder (software, intel, nvidia, apple, raspberry, or vaapi)
-      # PHOTOPRISM_FFMPEG_SIZE: "1920"               # video size limit in pixels (720-7680) (default: 3840)
-      # PHOTOPRISM_FFMPEG_BITRATE: "32"              # video bitrate limit in Mbit/s (default: 50)
-      ## Run/install on first startup (options: update https gpu tensorflow davfs clitools clean):
-      # PHOTOPRISM_INIT: "https gpu tensorflow"
-      ## Run as a non-root user after initialization (supported: 0, 33, 50-99, 500-600, and 900-1200):
-      # PHOTOPRISM_UID: 1000
-      # PHOTOPRISM_GID: 1000
-      # PHOTOPRISM_UMASK: 0000
+      PHOTOPRISM_AUTH_MODE             : "password"                            # 鉴权：设置鉴权模式为“密码”
+      PHOTOPRISM_ADMIN_USER            : "Administrator"                       # 鉴权：设置首次启动时创建的管理员用户名
+      PHOTOPRISM_ADMIN_PASSWORD        : "insecure"                            # 鉴权：设置管理员账户初始密码
+      PHOTOPRISM_PASSWORD_LENGTH       : 8                                     # 鉴权：设置最小密码长度
+      PHOTOPRISM_SESSION_MAXAGE        : 1209600                               # 鉴权：设置会话过期时间（秒）
+      PHOTOPRISM_SESSION_TIMEOUT       : 604800                                # 鉴权：设置会话超时时间（秒）
+      PHOTOPRISM_SESSION_CACHE         : 900                                   # 鉴权：设置会话缓存持续时间（秒）
+      PHOTOPRISM_LOG_LEVEL             : "info"                                # 日志：设置日志详细程度
+      PHOTOPRISM_DEBUG                 : "false"                               # 日志：设为true则启用调试模式
+      PHOTOPRISM_TRACE                 : "false"                               # 日志：设为true则启用跟踪模式，启用所有信息
+      #PHOTOPRISM_CONFIG_PATH          : ""                                    # 存储：config storage PATH, values in options.yml override CLI flags and environment variables if present
+      #PHOTOPRISM_DEFAULTS_YAML        : "/etc/photoprism/defaults.yml"        # 存储：	load config defaults from FILE if exists, does not override CLI flags and environment variables
+      #PHOTOPRISM_ORIGINALS_PATH       :                                       # 存储：storage PATH of your original media files (photos and videos)
+      PHOTOPRISM_ORIGINALS_LIMIT       : 10000                                 # 存储：maximum size of media files in MB (1-100000; -1 to disable)
+      PHOTOPRISM_RESOLUTION_LIMIT      : 900                                   # 存储：maximum resolution of media files in MEGAPIXELS (1-900; -1 to disable)
+      #PHOTOPRISM_USERS_PATH           : ""                                    # 存储：relative PATH to create base and upload subdirectories for users
+      #PHOTOPRISM_STORAGE_PATH         : ""                                    # 存储：writable storage PATH for sidecar, cache, and database files
+      #PHOTOPRISM_SIDECAR_PATH         : ""                                    # 存储：custom relative or absolute sidecar PATH optional
+      #PHOTOPRISM_BACKUP_PATH          : ""                                    # 存储：custom backup PATH for index backup files optional
+      #PHOTOPRISM_CACHE_PATH           : ""                                    # 存储：custom cache PATH for sessions and thumbnail files optional
+      #PHOTOPRISM_IMPORT_PATH          : ""                                    # 存储：base PATH from which files can be imported to originals optional
+      #PHOTOPRISM_IMPORT_DEST          : ""                                    # 存储：relative originals PATH to which the files should be imported by default optional
+      #PHOTOPRISM_ASSETS_PATH          : ""                                    # 存储：assets PATH containing static resources like icons, models, and translations
+      #PHOTOPRISM_TEMP_PATH            : ""                                    # 存储：temporary file PATH optional
+      PHOTOPRISM_WORKERS               : 4                                     # 工作线程：maximum NUMBER of indexing workers, default depends on the number of physical cores
+      PHOTOPRISM_WAKEUP_INTERVAL       : "15m0s"                               # 工作线程：DURATION between worker runs required for face recognition and index maintenance (1-86400s)
+      PHOTOPRISM_AUTO_INDEX            : 300                                   # 工作线程：WebDAV auto index safety delay in SECONDS (-1 to disable)
+      PHOTOPRISM_AUTO_IMPORT           : 180                                   # 工作线程：WebDAV auto import safety delay in SECONDS (-1 to disable)
+      PHOTOPRISM_READONLY              : "false"                               # 功能标识：设为true则禁用导入、上传、删除以及所有其它需要写入权限的操作
+      PHOTOPRISM_EXPERIMENTAL          : "false"                               # 功能标识：设为true则启用实验性功能
+      PHOTOPRISM_DISABLE_SETTINGS      : "false"                               # 功能标识：设为true则禁用UI和API中的设置能力
+      PHOTOPRISM_DISABLE_RESTART       : "false"                               # 功能标识：设为true则禁止从UI重启服务器
+      PHOTOPRISM_DISABLE_BACKUPS       : "false"                               # 功能标识：设为true则禁止将相册和照片元数据备份到YAML文件
+      PHOTOPRISM_DISABLE_WEBDAV        : "false"                               # 功能标识：设为true则禁用内置的WebDAV服务器
+      PHOTOPRISM_DISABLE_PLACES        : "false"                               # 功能标识：设为true则禁用反向地理编码和地图功能
+      PHOTOPRISM_DISABLE_TENSORFLOW    : "false"                               # 功能标识：设为true则禁用所有基于TensorFlow的功能
+      PHOTOPRISM_DISABLE_FACES         : "false"                               # 功能标识：设为true则禁用人脸检测和识别（此功能依赖TensorFlow）
+      PHOTOPRISM_DISABLE_CLASSIFICATIO : "false"                               # 功能标识：设为true则禁用图片分类功能（此功能依赖TensorFlow）
+      PHOTOPRISM_DISABLE_SIPS          : "false"                               # 功能标识：设为true则禁用Sips（仅用于MacOS）
+      PHOTOPRISM_DISABLE_FFMPEG        : "false"                               # 功能标识：设为true则禁用FFmpeg
+      PHOTOPRISM_DISABLE_EXIFTOOL      : "false"                               # 功能标识：设为true则禁用ExifTool
+      PHOTOPRISM_DISABLE_DARKTABLE     : "false"                               # 功能标识：设为true则禁用Darktable
+      PHOTOPRISM_DISABLE_RAWTHERAPEE   : "false"                               # 功能标识：设为true则禁用RawTherapee
+      PHOTOPRISM_DISABLE_IMAGEMAGICK   : "false"                               # 功能标识：设为true则禁用ImageMagic
+      PHOTOPRISM_DISABLE_HEIFCONVERT   : "false"                               # 功能标识：设为true则禁用libheif
+      PHOTOPRISM_DISABLE_RSVGCONVERT   : "false"                               # 功能标识：设为true则禁用librsvg
+      PHOTOPRISM_DISABLE_VECTORS       : "false"                               # 功能标识：设为true则禁用矢量图支持
+      PHOTOPRISM_DISABLE_JPEGXL        : "false"                               # 功能标识：设为true则禁用JPEGXL文件格式支持
+      PHOTOPRISM_DISABLE_RAW           : "false"                               # 功能标识：设为true则禁用RAW索引和转换功能
+      PHOTOPRISM_RAW_PRESETS           : "false"                               # 功能标识：设为true则允许在转换RAW图像时应用用户预设（会降低性能）
+      PHOTOPRISM_EXIF_BRUTEFORCE       : "false"                               # 功能标识：设为true则在为找到Exif标头时，始终执行强力搜索
+      PHOTOPRISM_DETECT_NSFW           : "false"                               # 功能标识：设为true则将NSFW图像标记为私人照片（此功能依赖TensorFlow）
+      PHOTOPRISM_UPLOAD_NSFW           : "true"                                # 功能标识：设为true则允许上传NSFW图像
+      PHOTOPRISM_DEFAULT_LOCALE        : "zh"                                  # 定制化：standard user interface language CODE
+      #PHOTOPRISM_DEFAULT_THEME        : ""                                    # 定制化：standard user interface theme NAME
+      #PHOTOPRISM_APP_NAME             : ""                                    # 定制化：progressive web app NAME when installed on a device
+      #PHOTOPRISM_APP_MODE             : ""                                    # 定制化：progressive web app MODE (fullscreen, standalone, minimal-ui, browser)
+      #PHOTOPRISM_APP_ICON             : ""                                    # 定制化：home screen ICON (logo, app, crisp, mint, bold, square)
+      PHOTOPRISM_APP_COLOR             : "#000000"                             # 定制化：WebApp初始界面配色代码
+      #PHOTOPRISM_LEGAL_INFO           : ""                                    # 定制化：legal information TEXT, displayed in the page footer
+      #PHOTOPRISM_LEGAL_URL            : ""                                    # 定制化：legal information URL
+      #PHOTOPRISM_WALLPAPER_URI        : ""                                    # 定制化：login screen background image URI
+      PHOTOPRISM_SITE_URL              : "http://localhost:2342/"              # 站点信息：站点URL
+      PHOTOPRISM_SITE_AUTHOR           : "Poetic Flower"                       # 站点信息：站长名称
+      PHOTOPRISM_SITE_TITLE            : "Site Title"                          # 站点信息：站点名称
+      PHOTOPRISM_SITE_CAPTION          : "AI-Powered Photos App"               # 站点信息：站点标题
+      PHOTOPRISM_SITE_DESCRIPTION      : "Get More Photos"                     # 站点信息：站点描述
+      #PHOTOPRISM_SITE_PREVIEW         : ""                                    # 站点信息：sharing preview image URL
+      #PHOTOPRISM_CDN_URL              : ""                                    # 站点信息：content delivery network URL
+      #PHOTOPRISM_CDN_VIDEO            : ""                                    # 站点信息：stream videos over the specified CDN
+      #PHOTOPRISM_CORS_ORIGIN          : ""                                    # 站点信息：origin URL from which browsers are allowed to perform cross-origin requests (leave empty to disable or use * to allow all)
+      #PHOTOPRISM_CORS_HEADERS         : ""                                    # 站点信息：one or more HEADERS that browsers should see when performing a cross-origin request
+      #PHOTOPRISM_CORS_METHODS         : ""                                    # 站点信息：one or more METHODS that may be used when performing a cross-origin request
+      #PHOTOPRISM_HTTPS_PROXY          :                                       # 代理服务器：配置https服务器地址
+      #PHOTOPRISM_HTTPS_PROXY_INSECURE :                                       # 代理服务器：设为true则忽略https证书校验
+      #PHOTOPRISM_TRUSTED_PROXY        :                                       # 代理服务器：
+      #PHOTOPRISM_PROXY_PROTO_HEADER   :                                       # 代理服务器：
+      #PHOTOPRISM_PROXY_PROTO_HTTPS    :                                       # 代理服务器：
+      PHOTOPRISM_DISABLE_TLS           : "false"                               # 网络服务器：disable HTTPS/TLS even if the site URL starts with https:// and a certificate is available
+      PHOTOPRISM_DEFAULT_TLS           : "true"                                # 网络服务器：default to a self-signed HTTPS/TLS certificate if no other certificate is available
+      #PHOTOPRISM_TLS_CERT             : ""                                    # 网络服务器：public HTTPS certificate FILE (.crt), ignored for Unix domain sockets
+      #PHOTOPRISM_TLS_KEY              : ""                                    # 网络服务器：private HTTPS key FILE (.key), ignored for Unix domain sockets
+      #PHOTOPRISM_DISABLE_STS          : ""                                    # 网络服务器：disable HTTP Strict-Transport-Security (STS) header
+      #PHOTOPRISM_STS_SECONDS          : 31536000                              # 网络服务器：TIME for the browser to remember that the site is to be accessed only via HTTPS (0 to disable)
+      #PHOTOPRISM_STS_SUBDOMAINS       : ""                                    # 网络服务器：rule applies to all subdomains as well
+      #PHOTOPRISM_STS_PRELOAD          : ""                                    # 网络服务器：submit to Google's HSTS preload service
+      #PHOTOPRISM_AUTH_LIMIT           : 60                                    # 网络服务器：来自单个IP的连续无效令牌访问的最大次数
+      #PHOTOPRISM_AUTH_INTERVAL        : "10s"                                 # 网络服务器：来自单个IP的无效令牌访问的平均持续时间（0-86400秒）
+      #PHOTOPRISM_LOGIN_LIMIT          : 10                                    # 网络服务器：来自单个IP的连续登录失败    的最大次数
+      #PHOTOPRISM_LOGIN_INTERVAL       : "1m0s"                                # 网络服务器：来自单个IP的登陆失败    的平均持续时间（0-86400秒）
+      #PHOTOPRISM_IPS_LIMIT            : 3                                     # 网络服务器：封禁IP前可容忍的恶意请求的最多尝试次数
+      #PHOTOPRISM_IPS_INTERVAL         : "1h0m0s"                              # 网络服务器：average DURATION between malicious request attempts from a single IP (0-86400s)
+      #PHOTOPRISM_HTTP_CSP             :                                       # 网络服务器：HTTP Content-Security-Policy (CSP) HEADER
+      #PHOTOPRISM_HTTP_CTO             : "nosniff"                             # 网络服务器：HTTP X-Content-Type-Options HEADER plus
+      #PHOTOPRISM_HTTP_COOP            : "same-origin"                         # 网络服务器：HTTP Cross-Origin-Opener-Policy (COOP) HEADER
+      #PHOTOPRISM_HTTP_REFERRER_POLICY : "same-origin"                         # 网络服务器：HTTP Referrer-Policy HEADER
+      #PHOTOPRISM_HTTP_FRAME_OPTIONS   : "DENY"                                # 网络服务器：HTTP X-Frame-Options
+      #PHOTOPRISM_HTTP_XSS_PROTECTION  : "1; mode=block"                       # 网络服务器：HTTP X-XSS-Protection
+      PHOTOPRISM_HTTP_MODE             : "release"                             # 网络服务器：Web服务器模式（debug, release, test）
+      PHOTOPRISM_HTTP_COMPRESSION      : "gzip"                                # 网络服务器：Web服务器压缩方式（gzip, none）
+      #PHOTOPRISM_HTTP_CACHE_PUBLIC    : ""                                    # 网络服务器：allow static content to be cached by a CDN or caching proxy
+      #PHOTOPRISM_HTTP_CACHE_MAXAGE    : 2592000                               # 网络服务器：time in SECONDS until cached content expires
+      PHOTOPRISM_HTTP_VIDEO_MAXAGE     : 21600                                 # 网络服务器：视频缓存过期时间（秒）
+      PHOTOPRISM_HTTP_HOST             : "0.0.0.0"                             # 网络服务器：Web服务器IP地址
+      PHOTOPRISM_HTTP_PORT             : 2342                                  # 网络服务器：Web服务器端口
+      #PHOTOPRISM_HTTP_HOSTNAME        : ""                                    # 网络服务器：serve requests for this HOSTNAME only
+      PHOTOPRISM_DATABASE_DRIVER       : "mysql"                               # 数据库连接：连接的数据库类型
+      #PHOTOPRISM_DATABASE_DSN         :                                       # 数据库连接：数据库连接DSN（MySQL可忽略）
+      PHOTOPRISM_DATABASE_NAME         : "photoprism"                          # 数据库连接：数据库名
+      PHOTOPRISM_DATABASE_SERVER       : "mariadb:3306"                        # 数据库连接：数据库访问路径
+      PHOTOPRISM_DATABASE_USER         : "photoprism"                          # 数据库连接：数据库用户名
+      PHOTOPRISM_DATABASE_PASSWORD     : "insecure"                            # 数据库连接：数据库用户密码
+      PHOTOPRISM_DATABASE_TIMEOUT      : 15                                    # 数据库连接：建立数据库连接的超时时间
+      PHOTOPRISM_DATABASE_CONNS        : 0                                     # 数据库连接：打开数据库连接的数量上线
+      PHOTOPRISM_DATABASE_CONNS_IDLE   : 0                                     # 数据库连接：空闲数据库连接的数量上线
+      #PHOTOPRISM_SIPS_BIN             : "sips"                                # 文件转换器：用于媒体文件转换的Sips命令路径    （仅用于macOS）
+      #PHOTOPRISM_SIPS_BLACKLIST       : "avif,avifs"                          # 文件转换器：已配置的扩展名将不使用Sips进行转换（仅用于macOS）
+      PHOTOPRISM_FFMPEG_BIN            : "ffmpeg"                              # 文件转换器：用于视频转码和缩略图提取的FFmpeg命令路径
+      PHOTOPRISM_FFMPEG_ENCODER        : "software"                            # 文件转换器：FFmpeg默认使用的H.264/AVC视频流编码器(software, intel, nvidia, apple, raspberry, or vaapi)
+      PHOTOPRISM_FFMPEG_SIZE           : 3840                                  # 文件转换器：最大视频尺寸（像素，720-7680）
+      PHOTOPRISM_FFMPEG_BITRATE        : 60                                    # 文件转换器：最大视频码率（Mbit/s）
+      PHOTOPRISM_FFMPEG_MAP_VIDEO      : "0:v:0"                               # 文件转换器：应被转码的视频流
+      PHOTOPRISM_FFMPEG_MAP_AUDIO      : "0:a:0?"                              # 文件转换器：应被转码的音频流
+      PHOTOPRISM_EXIFTOOL_BIN          : "exiftool"                            # 文件转换器：用于提取元数据的ExifTool命令路径
+      PHOTOPRISM_DARKTABLE_BIN         : "darktable-cli"                       # 文件转换器：用于将RAW转换为JPEG的Darkable命令路径
+      #PHOTOPRISM_DARKTABLE_BLACKLIST  : ""                                    # 文件转换器：已配置的扩展名将不使用Darktable进行转换
+      #PHOTOPRISM_DARKTABLE_CACHE_PATH : ""                                    # 文件转换器：自定义Darktable缓存路径
+      #PHOTOPRISM_DARKTABLE_CONFIG_PATH: ""                                    # 文件转换器：自定义Darktable配置路径
+      PHOTOPRISM_RAWTHERAPEE_BIN       : "rawtherapee-cli"                     # 文件转换器：RawTherapee CLI COMMAND for RAW to JPEG conversion
+      PHOTOPRISM_RAWTHERAPEE_BLACKLIST : "dng"                                 # 文件转换器：已配置的扩展名将不使用RawTherapee进行转换
+      PHOTOPRISM_IMAGEMAGICK_BIN       : "convert"                             # 文件转换器：ImageMagick CLI COMMAND for image file conversion
+      PHOTOPRISM_IMAGEMAGICK_BLACKLIST : "heif,heic,heics,avif,avifs,jxl"      # 文件转换器：已配置的扩展名将不使用ImageMagick进行转换
+      PHOTOPRISM_HEIFCONVERT_BIN       : "heif-convert"                        # 文件转换器：libheif HEIC image conversion COMMAND
+      PHOTOPRISM_RSVGCONVERT_BIN       : "rsvg-convert"                        # 文件转换器：librsvg SVG graphics conversion COMMAND plus
+      #PHOTOPRISM_DOWNLOAD_TOKEN       : ""                                    # 安全令牌：DEFAULT download URL token for originals (leave empty for a random value)
+      #PHOTOPRISM_PREVIEW_TOKEN        : ""                                    # 安全令牌：DEFAULT thumbnail and video streaming URL token (leave empty for a random value)
+      PHOTOPRISM_THUMB_COLOR           : "sRGB"                                # 图像质量：standard color PROFILE for thumbnails (leave blank to disable)
+      PHOTOPRISM_THUMB_FILTER          : "blackman"                            # 图像质量：image downscaling filter NAME (best to worst: blackman, lanczos, cubic, linear)
+      PHOTOPRISM_THUMB_SIZE            : 7680                                  # 图像质量：maximum size of thumbnails created during indexing in PIXELS (720-7680)
+      PHOTOPRISM_THUMB_SIZE_UNCACHED   : 7680                                  # 图像质量：maximum size of missing thumbnails created on demand in PIXELS (720-7680)
+      PHOTOPRISM_THUMB_UNCACHED        : "true"                                # 图像质量：enable on-demand creation of missing thumbnails (high memory and cpu usage)
+      PHOTOPRISM_JPEG_QUALITY          : 100                                   # 图像质量：a higher value increases the QUALITY and file size of JPEG images and thumbnails (25-100)
+      PHOTOPRISM_JPEG_SIZE             : 30000                                 # 图像质量：maximum size of created JPEG sidecar files in PIXELS (720-30000)
+      PHOTOPRISM_PNG_SIZE              : 30000                                 # 图像质量：maximum size of created PNG sidecar files in PIXELS (720-30000)
+      PHOTOPRISM_FACE_SIZE             : 50                                    # 面部识别：minimum size of faces in PIXELS (20-10000)
+      PHOTOPRISM_FACE_SCORE            : 9.000000                              # 面部识别：minimum face QUALITY score (1-100)
+      PHOTOPRISM_FACE_OVERLAP          : 42                                    # 面部识别：face area overlap threshold in PERCENT (1-100)
+      PHOTOPRISM_FACE_CLUSTER_SIZE     : 80                                    # 面部识别：minimum size of automatically clustered faces in PIXELS (20-10000)
+      PHOTOPRISM_FACE_CLUSTER_SCORE    : 15                                    # 面部识别：minimum QUALITY score of automatically clustered faces (1-100)
+      PHOTOPRISM_FACE_CLUSTER_CORE     : 4                                     # 面部识别：NUMBER of faces forming a cluster core (1-100)
+      PHOTOPRISM_FACE_CLUSTER_DIST     : 0.640000                              # 面部识别：similarity DISTANCE of faces forming a cluster core (0.1-1.5)
+      PHOTOPRISM_FACE_MATCH_DIST       : 0.460000                              # 面部识别：similarity OFFSET for matching faces with existing clusters (0.1-1.5)
+      #PHOTOPRISM_PID_FILENAME         : ""                                    # 守护进程模式：process id FILE daemon-mode only
+      #PHOTOPRISM_LOG_FILENAME         : ""                                    # 守护进程模式：server log FILE daemon-mode only
+      PHOTOPRISM_UID                   : 1000                                  # 仅用于容器：初始化后以非特权用户运行
+      PHOTOPRISM_GID                   : 1000                                  # 仅用于容器：初始化后以非特权组运行
+      PHOTOPRISM_UMASK                 : 0000                                  # 仅用于容器：创建文件时默认的访问权限
+      PHOTOPRISM_INIT                  : "update https gpu tensorflow clean"   # 仅用于容器：首次启动时运行或安装的组件/服务
+      PHOTOPRISM_DISABLE_CHOWN         : "false"                               # 仅用于容器：设为true则在启动时禁用chmod/chown更新存储权限
+
     ## Start as non-root user before initialization (supported: 0, 33, 50-99, 500-600, and 900-1200):
     # user: "1000:1000"
     ## Share hardware devices with FFmpeg and TensorFlow (optional):
@@ -122,7 +240,7 @@ services:
     command: --innodb-buffer-pool-size=512M --transaction-isolation=READ-COMMITTED --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci --max-connections=512 --innodb-rollback-on-timeout=OFF --innodb-lock-wait-timeout=120
     ## Never store database files on an unreliable device such as a USB flash drive, an SD card, or a shared network folder:
     volumes:
-      - "./database:/var/lib/mysql" # DO NOT REMOVE
+      - "./MariaDB:/var/lib/mysql" # DO NOT REMOVE
     environment:
       MARIADB_AUTO_UPGRADE: "1"
       MARIADB_INITDB_SKIP_TZINFO: "1"
